@@ -1116,16 +1116,55 @@
         </div>
       </div>
 
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--green);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">💰</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Memahami Profit & Margin</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+              <b>HPP</b> = total biaya bahan + packaging untuk 1 porsi<br>
+              <b>Harga Jual</b> = HPP ÷ (1 − target margin)<br>
+              <b>Untung/Porsi</b> = Harga Jual − HPP<br><br>
+              Contoh: HPP Rp10.000, target margin 50%<br>
+              → Harga Jual = Rp10.000 ÷ 0,5 = <b style="color:var(--orange)">Rp20.000</b><br>
+              → Untung = <b style="color:var(--green)">Rp10.000/porsi</b><br><br>
+              <b>Status margin:</b><br>
+              🚀 <b>≥50%</b> = Sangat Untung (ideal)<br>
+              🟢 <b>30–49%</b> = Sehat<br>
+              🔴 <b>&lt;30%</b> = Berisiko, harga terlalu murah
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--navy);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">⚙️</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Penjelasan Setting</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+              <b>Biaya Operasional (%)</b><br>
+              Biaya gas, listrik, tenaga kerja dalam persen dari HPP bahan. Contoh: isi 30% jika biaya operasional sekitar 30% dari biaya bahan.<br><br>
+              <b>Target Profit Default (%)</b><br>
+              Margin keuntungan yang ingin dicapai. Disarankan <b>50%</b> untuk UMKM F&B.<br><br>
+              <b>Pembulatan Harga</b><br>
+              Harga jual akan dibulatkan ke kelipatan ini agar lebih "cantik". Contoh: Rp19.750 → Rp20.000 (bulatkan ke 500).<br><br>
+              <b>Fee Marketplace</b><br>
+              Jika jual di GoFood/GrabFood/ShopeeFood, masukkan % komisi platform agar harga jual sudah memperhitungkan potongan.
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" style="background:var(--orange-light)">
         <div style="display:flex;align-items:flex-start;gap:10px">
           <div style="font-size:22px">💡</div>
           <div>
             <div style="font-weight:800;font-size:14px;color:var(--navy);margin-bottom:4px">Tips Penting</div>
             <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
-              • <strong>HPP</strong> = biaya total untuk membuat 1 porsi<br>
-              • <strong>Margin 50%</strong> = untung sehat untuk UMKM<br>
-              • Jangan lupa tambah biaya gas, listrik di kolom biaya operasional<br>
-              • Update harga bahan secara berkala agar kalkulasi tetap akurat
+              • Jangan lupa tambah biaya gas & listrik di <b>Biaya Operasional</b><br>
+              • Update harga bahan secara berkala agar akurat<br>
+              • Gunakan tab <b>Hitung</b> untuk simulasi harga sebelum memutuskan
             </div>
           </div>
         </div>
@@ -1726,6 +1765,10 @@ function renderMenu() {
           <div style="font-size:11px;color:var(--gray-400);font-weight:700">HPP Real</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--gray-600)">${fmt(hasil.hppReal)}</div>
         </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--gray-400);font-weight:700">Untung/Porsi</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green)">${fmt(hasil.hargaJual - hasil.hppReal)}</div>
+        </div>
         <div style="text-align:right">
           <div style="font-size:11px;color:var(--gray-400);font-weight:700">Harga Jual</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--orange)">${fmt(hasil.hargaJual)}</div>
@@ -2069,11 +2112,12 @@ function renderDashboard() {
 
   menuListEl.innerHTML = hasilList.slice(0, 5).map(({ menu: m, hasil: h }) => {
     const s = getStatusBadge(h.margin);
+    const profit = h.hargaJual - h.hppReal;
     return `<div class="list-item" onclick='hitungDanTampilMenu("${m.id}")' style="cursor:pointer">
       <div class="list-item-icon">${m.emoji || '🍽️'}</div>
       <div class="list-item-info">
         <div class="list-item-name">${m.nama}</div>
-        <div class="list-item-sub">HPP ${fmt(h.hppReal)} · Margin <b>${pct(h.margin)}</b></div>
+        <div class="list-item-sub">HPP ${fmt(h.hppReal)} · <span style="color:var(--green);font-weight:700">Untung ${fmt(profit)}</span></div>
       </div>
       <div style="text-align:right">
         <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--orange)">${fmt(h.hargaJual)}</div>
