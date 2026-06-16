@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "mcp__b447ce3d-7b67-4c18-9f72-14b864eec4e0__netlify-project-services-reader"
     ]
   }
 }
