@@ -995,21 +995,21 @@
       <div class="card">
         <div class="card-title">🛵 Fee Marketplace</div>
         <div class="setting-row">
-          <div class="setting-icon">🟢</div>
+          <div class="setting-icon" style="background:none;padding:0;overflow:hidden"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#00AA13"/><text x="20" y="18" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="13">Go</text><text x="20" y="30" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="10">Food</text></svg></div>
           <div class="setting-info">
             <div class="setting-label">GoFood</div>
           </div>
           <input type="number" class="setting-input" id="setting-gofood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
         </div>
         <div class="setting-row">
-          <div class="setting-icon">🟢</div>
+          <div class="setting-icon" style="background:none;padding:0;overflow:hidden"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#00B14F"/><text x="20" y="17" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="10.5">Grab</text><text x="20" y="30" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="10">Food</text></svg></div>
           <div class="setting-info">
             <div class="setting-label">GrabFood</div>
           </div>
           <input type="number" class="setting-input" id="setting-grabfood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
         </div>
         <div class="setting-row">
-          <div class="setting-icon">🟠</div>
+          <div class="setting-icon" style="background:none;padding:0;overflow:hidden"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#F05523"/><text x="20" y="17" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="9">Shopee</text><text x="20" y="30" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="10">Food</text></svg></div>
           <div class="setting-info">
             <div class="setting-label">ShopeeFood</div>
           </div>
@@ -1132,6 +1132,30 @@
               🚀 <b>≥50%</b> = Sangat Untung (ideal)<br>
               🟢 <b>30–49%</b> = Sehat<br>
               🔴 <b>&lt;30%</b> = Berisiko, harga terlalu murah
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--orange);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0">A/B</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Metode A vs Metode B</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+              Ada 2 cara menghitung harga jual dari HPP:<br><br>
+              <b>Metode A — Target Profit Markup</b><br>
+              Profit dihitung <em>dari HPP</em> (biaya produksi).<br>
+              Rumus: <span style="font-family:monospace;background:var(--gray-100);padding:1px 5px;border-radius:4px;font-size:11px">HPP × (1 + target%)</span><br>
+              Contoh HPP Rp10.000, target 50%:<br>
+              → Harga Jual = Rp15.000 · Untung = <b style="color:var(--orange)">Rp5.000</b> (margin 33%)<br><br>
+              <b>Metode B — Margin Harga Jual</b><br>
+              Profit dihitung <em>dari harga jual</em> itu sendiri.<br>
+              Rumus: <span style="font-family:monospace;background:var(--gray-100);padding:1px 5px;border-radius:4px;font-size:11px">HPP ÷ (1 − target%)</span><br>
+              Contoh HPP Rp10.000, target 50%:<br>
+              → Harga Jual = Rp20.000 · Untung = <b style="color:var(--green)">Rp10.000</b> (margin 50%) ✓<br><br>
+              <b>💡 Pakai yang mana?</b><br>
+              <b>Metode B</b> lebih umum di industri F&B profesional — margin yang kamu targetkan benar-benar tercapai dari harga jual, bukan dari biaya. Gunakan Metode A hanya jika kamu ingin markup sederhana dari modal.
             </div>
           </div>
         </div>
@@ -1934,19 +1958,19 @@ function renderHasil(h, menuNama) {
     <div class="section-label">🛵 Harga Marketplace</div>
     <div class="marketplace-grid">
       <div class="mp-card">
-        <div class="mp-logo">🟢</div>
+        <div class="mp-logo"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#00AA13"/><text x="16" y="15" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="11">Go</text><text x="16" y="25" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="8">Food</text></svg></div>
         <div class="mp-name">GoFood</div>
         <div class="mp-price">${fmt(h.hargaGoFood)}</div>
         <div class="mp-fee">Fee ${h.settings ? h.settings.feeGoFood : 20}%</div>
       </div>
       <div class="mp-card">
-        <div class="mp-logo">🟢</div>
+        <div class="mp-logo"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#00B14F"/><text x="16" y="15" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="9">Grab</text><text x="16" y="25" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="8">Food</text></svg></div>
         <div class="mp-name">GrabFood</div>
         <div class="mp-price">${fmt(h.hargaGrabFood)}</div>
         <div class="mp-fee">Fee ${h.settings ? h.settings.feeGrabFood : 20}%</div>
       </div>
       <div class="mp-card">
-        <div class="mp-logo">🟠</div>
+        <div class="mp-logo"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#F05523"/><text x="16" y="14" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="7.5">Shopee</text><text x="16" y="25" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="8">Food</text></svg></div>
         <div class="mp-name">ShopeeFood</div>
         <div class="mp-price">${fmt(h.hargaShopeeFood)}</div>
         <div class="mp-fee">Fee ${h.settings ? h.settings.feeShopeeFood : 20}%</div>
