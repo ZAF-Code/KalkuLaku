@@ -208,7 +208,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 99;
+      z-index: 101;
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .fab:active { transform: translateX(-50%) scale(0.95); }
@@ -824,6 +824,9 @@
       <div class="topbar-logo">
         <div class="logo-icon">🧮</div>
         <span>Kalku<em>Laku</em></span>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="goToPage('panduan')" title="Cara Penggunaan" style="font-size:18px;font-weight:900">?</button>
       </div>
     </div>
     <div class="scroll-area">
