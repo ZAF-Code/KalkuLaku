@@ -193,8 +193,9 @@
     /* ─── FAB ─── */
     .fab {
       position: fixed;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 68px);
-      right: max(16px, calc(50% - 240px + 16px));
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 62px);
+      left: 50%;
+      transform: translateX(-50%);
       width: 52px;
       height: 52px;
       background: var(--orange);
@@ -207,11 +208,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 99;
+      z-index: 101;
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .fab:active { transform: scale(0.95); }
-    .fab:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(245,166,35,0.5); }
+    .fab:active { transform: translateX(-50%) scale(0.95); }
+    .fab:hover { transform: translateX(-50%) scale(1.05); box-shadow: 0 6px 28px rgba(245,166,35,0.5); }
     .fab.hidden { display: none; }
 
     /* ─── CARDS ─── */
@@ -825,16 +826,14 @@
         <span>Kalku<em>Laku</em></span>
       </div>
       <div class="topbar-right">
-        <button class="topbar-btn" onclick="exportData()" title="Export Data">📤</button>
-        <button class="topbar-btn" onclick="document.getElementById('import-input').click()" title="Import Data">📥</button>
-        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)" />
+        <button class="topbar-btn" onclick="goToPage('panduan')" title="Cara Penggunaan" style="font-size:18px;font-weight:900">?</button>
       </div>
     </div>
     <div class="scroll-area">
       <div class="hero-banner">
         <h2>Selamat datang di KalkuLaku!</h2>
         <p>Hitung HPP & Harga Jual Menu F&B-mu dalam sekali input</p>
-        <button class="hero-cta" onclick="goToPage('kalkulator')">🧮 Hitung Sekarang</button>
+        <button class="hero-cta" onclick="goToPage('panduan')">📖 Cara Penggunaan</button>
       </div>
       <div class="stat-grid" id="dashboard-stats">
         <!-- diisi JS -->
@@ -996,21 +995,21 @@
       <div class="card">
         <div class="card-title">🛵 Fee Marketplace</div>
         <div class="setting-row">
-          <div class="setting-icon">🟢</div>
+          <div class="setting-icon" style="background:none;padding:0;overflow:hidden"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#00AA13"/><text x="20" y="18" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="13">Go</text><text x="20" y="30" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="10">Food</text></svg></div>
           <div class="setting-info">
             <div class="setting-label">GoFood</div>
           </div>
           <input type="number" class="setting-input" id="setting-gofood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
         </div>
         <div class="setting-row">
-          <div class="setting-icon">🟢</div>
+          <div class="setting-icon" style="background:none;padding:0;overflow:hidden"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#00B14F"/><text x="20" y="17" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="10.5">Grab</text><text x="20" y="30" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="10">Food</text></svg></div>
           <div class="setting-info">
             <div class="setting-label">GrabFood</div>
           </div>
           <input type="number" class="setting-input" id="setting-grabfood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
         </div>
         <div class="setting-row">
-          <div class="setting-icon">🟠</div>
+          <div class="setting-icon" style="background:none;padding:0;overflow:hidden"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#F05523"/><text x="20" y="17" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="9">Shopee</text><text x="20" y="30" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="10">Food</text></svg></div>
           <div class="setting-info">
             <div class="setting-label">ShopeeFood</div>
           </div>
@@ -1019,20 +1018,185 @@
       </div>
 
       <div class="card">
-        <div class="card-title">💾 Backup & Restore</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn btn-navy btn-sm" onclick="exportData()">📤 Export JSON</button>
-          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-input2').click()">📥 Import JSON</button>
-          <input type="file" id="import-input2" accept=".json" style="display:none" onchange="importData(event)" />
-          <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red)" onclick="resetAllData()">🗑️ Reset Data</button>
+        <div class="card-title">🗑️ Reset Data</div>
+        <p style="font-size:13px;color:var(--gray-600);margin-bottom:12px">Hapus semua data bahan, packaging, dan menu. Tindakan ini tidak bisa dibatalkan.</p>
+        <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red)" onclick="resetAllData()">🗑️ Hapus Semua Data</button>
+      </div>
+
+      <div class="card" style="cursor:pointer;display:flex;align-items:center;gap:12px" onclick="goToPage('panduan')">
+        <div style="font-size:28px">📖</div>
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:15px;color:var(--navy)">Cara Penggunaan</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">Panduan lengkap menggunakan KalkuLaku</div>
         </div>
+        <div style="color:var(--gray-400);font-size:18px">›</div>
       </div>
 
       <div class="card" style="text-align:center;padding:20px;">
         <div style="font-size:32px;margin-bottom:8px">🧮</div>
         <div style="font-weight:900;font-size:16px;color:var(--navy)">KalkuLaku v2.0</div>
         <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Kalkulator HPP F&B untuk UMKM Indonesia</div>
-        <div style="font-size:11px;color:var(--gray-400);margin-top:8px">by Jawara Abda · Yogyakarta</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:8px">by ZAFTech.ID</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PAGE: PANDUAN ─── -->
+  <div class="page" id="page-panduan">
+    <div class="topbar" style="display:flex;align-items:center;gap:12px">
+      <button onclick="goToPage('settings')" style="background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center">‹</button>
+      <div class="topbar-logo">
+        <span>Cara <em>Penggunaan</em></span>
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="card" style="background:linear-gradient(135deg,var(--navy),var(--navy-light));color:white;padding:20px">
+        <div style="font-size:32px;margin-bottom:8px">👋</div>
+        <div style="font-weight:900;font-size:18px;margin-bottom:6px">Selamat datang di KalkuLaku!</div>
+        <div style="font-size:13px;opacity:0.85;line-height:1.5">Ikuti 4 langkah mudah ini untuk menghitung HPP dan harga jual menu F&B kamu.</div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--orange);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">1</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Tambah Bahan Baku</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
+              • Buka tab <strong>Bahan</strong> di menu bawah<br>
+              • Ketuk tombol <strong>＋</strong> di tengah bawah<br>
+              • Isi nama bahan, harga beli, dan jumlah per satuan<br>
+              • Contoh: Ayam Fillet · Rp 55.000 · 1000 gram
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--orange);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">2</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Tambah Packaging</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
+              • Buka tab <strong>Pack</strong> di menu bawah<br>
+              • Ketuk tombol <strong>＋</strong> di tengah bawah<br>
+              • Isi nama packaging dan harga per pcs<br>
+              • Contoh: Box Makan · Rp 1.500 · 1 pcs
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--orange);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">3</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Buat Menu Baru</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
+              • Buka tab <strong>Menu</strong> di menu bawah<br>
+              • Ketuk tombol <strong>＋</strong> di tengah bawah<br>
+              • Isi nama menu dan pilih bahan yang dipakai<br>
+              • Tentukan berapa gram/pcs setiap bahan untuk 1 porsi
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--orange);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">4</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Hitung Harga Jual</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
+              • Buka tab <strong>Hitung</strong> di menu bawah<br>
+              • Pilih menu yang ingin dihitung<br>
+              • Atur target profit dan biaya operasional<br>
+              • Lihat <strong>HPP</strong> dan <strong>Harga Jual</strong> yang direkomendasikan
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--green);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">💰</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Memahami Profit & Margin</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+              <b>HPP</b> = total biaya bahan + packaging untuk 1 porsi<br>
+              <b>Harga Jual</b> = HPP ÷ (1 − target margin)<br>
+              <b>Untung/Porsi</b> = Harga Jual − HPP<br><br>
+              Contoh: HPP Rp10.000, target margin 50%<br>
+              → Harga Jual = Rp10.000 ÷ 0,5 = <b style="color:var(--orange)">Rp20.000</b><br>
+              → Untung = <b style="color:var(--green)">Rp10.000/porsi</b><br><br>
+              <b>Status margin:</b><br>
+              🚀 <b>≥50%</b> = Sangat Untung (ideal)<br>
+              🟢 <b>30–49%</b> = Sehat<br>
+              🔴 <b>&lt;30%</b> = Berisiko, harga terlalu murah
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--orange);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0">A/B</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Metode A vs Metode B</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+              Ada 2 cara menghitung harga jual dari HPP:<br><br>
+              <b>Metode A — Target Profit Markup</b><br>
+              Profit dihitung <em>dari HPP</em> (biaya produksi).<br>
+              Rumus: <span style="font-family:monospace;background:var(--gray-100);padding:1px 5px;border-radius:4px;font-size:11px">HPP × (1 + target%)</span><br>
+              Contoh HPP Rp10.000, target 50%:<br>
+              → Harga Jual = Rp15.000 · Untung = <b style="color:var(--orange)">Rp5.000</b> (margin 33%)<br><br>
+              <b>Metode B — Margin Harga Jual</b><br>
+              Profit dihitung <em>dari harga jual</em> itu sendiri.<br>
+              Rumus: <span style="font-family:monospace;background:var(--gray-100);padding:1px 5px;border-radius:4px;font-size:11px">HPP ÷ (1 − target%)</span><br>
+              Contoh HPP Rp10.000, target 50%:<br>
+              → Harga Jual = Rp20.000 · Untung = <b style="color:var(--green)">Rp10.000</b> (margin 50%) ✓<br><br>
+              <b>💡 Pakai yang mana?</b><br>
+              <b>Metode B</b> lebih umum di industri F&B profesional — margin yang kamu targetkan benar-benar tercapai dari harga jual, bukan dari biaya. Gunakan Metode A hanya jika kamu ingin markup sederhana dari modal.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:4px">
+          <div style="background:var(--navy);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">⚙️</div>
+          <div>
+            <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px">Penjelasan Setting</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+              <b>Biaya Operasional (%)</b><br>
+              Biaya gas, listrik, tenaga kerja dalam persen dari HPP bahan. Contoh: isi 30% jika biaya operasional sekitar 30% dari biaya bahan.<br><br>
+              <b>Target Profit Default (%)</b><br>
+              Margin keuntungan yang ingin dicapai. Disarankan <b>50%</b> untuk UMKM F&B.<br><br>
+              <b>Pembulatan Harga</b><br>
+              Harga jual akan dibulatkan ke kelipatan ini agar lebih "cantik". Contoh: Rp19.750 → Rp20.000 (bulatkan ke 500).<br><br>
+              <b>Fee Marketplace</b><br>
+              Jika jual di GoFood/GrabFood/ShopeeFood, masukkan % komisi platform agar harga jual sudah memperhitungkan potongan.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:var(--orange-light)">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="font-size:22px">💡</div>
+          <div>
+            <div style="font-weight:800;font-size:14px;color:var(--navy);margin-bottom:4px">Tips Penting</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
+              • Jangan lupa tambah biaya gas & listrik di <b>Biaya Operasional</b><br>
+              • Update harga bahan secara berkala agar akurat<br>
+              • Gunakan tab <b>Hitung</b> untuk simulasi harga sebelum memutuskan
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:center">
+        <div style="font-size:13px;color:var(--gray-400)">Butuh bantuan lebih lanjut?</div>
+        <div style="font-size:13px;color:var(--navy);font-weight:700;margin-top:4px">ZAFTech.ID</div>
       </div>
     </div>
   </div>
@@ -1262,10 +1426,10 @@ function goToPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
+  document.getElementById('nav-' + page)?.classList.add('active');
   currentPage = page;
   const fab = document.getElementById('fab-btn');
-  fab.classList.toggle('hidden', page === 'settings' || page === 'kalkulator');
+  fab.classList.toggle('hidden', page === 'settings' || page === 'kalkulator' || page === 'panduan');
   renderPage(page);
 }
 
@@ -1625,6 +1789,10 @@ function renderMenu() {
           <div style="font-size:11px;color:var(--gray-400);font-weight:700">HPP Real</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--gray-600)">${fmt(hasil.hppReal)}</div>
         </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--gray-400);font-weight:700">Untung/Porsi</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green)">${fmt(hasil.hargaJual - hasil.hppReal)}</div>
+        </div>
         <div style="text-align:right">
           <div style="font-size:11px;color:var(--gray-400);font-weight:700">Harga Jual</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--orange)">${fmt(hasil.hargaJual)}</div>
@@ -1790,19 +1958,19 @@ function renderHasil(h, menuNama) {
     <div class="section-label">🛵 Harga Marketplace</div>
     <div class="marketplace-grid">
       <div class="mp-card">
-        <div class="mp-logo">🟢</div>
+        <div class="mp-logo"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#00AA13"/><text x="16" y="15" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="11">Go</text><text x="16" y="25" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="8">Food</text></svg></div>
         <div class="mp-name">GoFood</div>
         <div class="mp-price">${fmt(h.hargaGoFood)}</div>
         <div class="mp-fee">Fee ${h.settings ? h.settings.feeGoFood : 20}%</div>
       </div>
       <div class="mp-card">
-        <div class="mp-logo">🟢</div>
+        <div class="mp-logo"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#00B14F"/><text x="16" y="15" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="9">Grab</text><text x="16" y="25" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="8">Food</text></svg></div>
         <div class="mp-name">GrabFood</div>
         <div class="mp-price">${fmt(h.hargaGrabFood)}</div>
         <div class="mp-fee">Fee ${h.settings ? h.settings.feeGrabFood : 20}%</div>
       </div>
       <div class="mp-card">
-        <div class="mp-logo">🟠</div>
+        <div class="mp-logo"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#F05523"/><text x="16" y="14" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="900" font-size="7.5">Shopee</text><text x="16" y="25" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="8">Food</text></svg></div>
         <div class="mp-name">ShopeeFood</div>
         <div class="mp-price">${fmt(h.hargaShopeeFood)}</div>
         <div class="mp-fee">Fee ${h.settings ? h.settings.feeShopeeFood : 20}%</div>
@@ -1968,11 +2136,12 @@ function renderDashboard() {
 
   menuListEl.innerHTML = hasilList.slice(0, 5).map(({ menu: m, hasil: h }) => {
     const s = getStatusBadge(h.margin);
+    const profit = h.hargaJual - h.hppReal;
     return `<div class="list-item" onclick='hitungDanTampilMenu("${m.id}")' style="cursor:pointer">
       <div class="list-item-icon">${m.emoji || '🍽️'}</div>
       <div class="list-item-info">
         <div class="list-item-name">${m.nama}</div>
-        <div class="list-item-sub">HPP ${fmt(h.hppReal)} · Margin <b>${pct(h.margin)}</b></div>
+        <div class="list-item-sub">HPP ${fmt(h.hppReal)} · <span style="color:var(--green);font-weight:700">Untung ${fmt(profit)}</span></div>
       </div>
       <div style="text-align:right">
         <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--orange)">${fmt(h.hargaJual)}</div>
