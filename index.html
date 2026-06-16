@@ -1449,7 +1449,7 @@ function openFAB() {
   if (currentPage === 'bahan') openModal('modal-bahan', 'add');
   else if (currentPage === 'packaging') openModal('modal-packaging', 'add');
   else if (currentPage === 'menu') openModal('modal-menu', 'add');
-  else if (currentPage === 'dashboard') goToPage('menu');
+  else if (currentPage === 'dashboard') { goToPage('menu'); openModal('modal-menu', 'add'); }
 }
 
 // ══════════════════════════════════════════
