@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1A1A2E" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="KalkuLaku" />
+  <meta name="description" content="Kalkulator HPP, Harga Jual, dan Profit F&B untuk UMKM Indonesia" />
+  <title>KalkuLaku — Kalkulator HPP F&B</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1A1A2E;
+      --navy-mid: #16213E;
+      --navy-light: #0F3460;
+      --orange: #F5A623;
+      --orange-dark: #E09215;
+      --orange-light: #FFF3D8;
+      --green-bg: #E8F5E9;
+      --green: #2E7D32;
+      --red-bg: #FFEBEE;
+      --red: #C62828;
+      --yellow-bg: #FFF8E1;
+      --yellow: #F57F17;
+      --white: #FFFFFF;
+      --gray-50: #F7F8FA;
+      --gray-100: #EFEFEF;
+      --gray-200: #E0E0E0;
+      --gray-400: #9E9E9E;
+      --gray-600: #616161;
+      --gray-800: #212121;
+      --text: #1A1A2E;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Nunito', sans-serif;
+      background: var(--gray-50);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    #app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      background: var(--gray-50);
+    }
+
+    /* ─── TOP BAR ─── */
+    .topbar {
+      background: var(--navy);
+      color: white;
+      padding: 48px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-logo .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .topbar-logo span {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+    .topbar-logo span em {
+      color: var(--orange);
+      font-style: normal;
+    }
+    .topbar-right {
+      display: flex;
+      gap: 8px;
+    }
+    .topbar-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .topbar-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* ─── PAGE TITLE BAR ─── */
+    .page-header {
+      background: var(--navy);
+      color: white;
+      padding: 0 20px 20px;
+      flex-shrink: 0;
+    }
+    .page-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .page-header p {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    /* ─── SCROLL AREA ─── */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      padding-bottom: 100px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* ─── BOTTOM NAV ─── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px 12px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--gray-400);
+      font-family: 'Nunito', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-item .nav-icon { font-size: 20px; margin-bottom: 2px; }
+    .nav-item.active { color: var(--orange); }
+    .nav-item.active .nav-icon {
+      background: var(--orange-light);
+      border-radius: 12px;
+      padding: 4px 10px;
+    }
+
+    /* ─── FAB ─── */
+    .fab {
+      position: fixed;
+      bottom: 80px;
+      right: calc(50% - 240px + 16px);
+      width: 56px;
+      height: 56px;
+      background: var(--orange);
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(245,166,35,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .fab:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(245,166,35,0.5); }
+    .fab.hidden { display: none; }
+
+    /* ─── CARDS ─── */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--gray-400);
+      margin-bottom: 12px;
+    }
+
+    /* ─── STAT CARDS ─── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .stat-card .stat-label {
+      font-size: 11px;
+      color: var(--gray-400);
+      font-weight: 700;
+    }
+    .stat-card .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-top: 4px;
+    }
+    .stat-card .stat-icon {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    /* ─── HERO BANNER ─── */
+    .hero-banner {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: white;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::after {
+      content: '🧮';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 52px;
+      opacity: 0.15;
+    }
+    .hero-banner h2 {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .hero-banner p {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+    .hero-banner .hero-cta {
+      margin-top: 12px;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .hero-banner .hero-cta:hover { opacity: 0.9; }
+
+    /* ─── LIST ITEMS ─── */
+    .list-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+      gap: 12px;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--orange-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .list-item-info { flex: 1; min-width: 0; }
+    .list-item-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .list-item-sub {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+    .list-item-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: right;
+    }
+    .list-item-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .btn-edit { background: var(--gray-100); color: var(--gray-600); }
+    .btn-del { background: var(--red-bg); color: var(--red); }
+
+    /* ─── FORM ─── */
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: var(--navy);
+      background: white;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--orange); }
+    .form-input-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    select.form-input { cursor: pointer; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-hint {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--gray-100); color: var(--gray-800); }
+    .btn-navy { background: var(--navy); color: white; }
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: 10px;
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ─── PRICE TAG CARD ─── */
+    .price-tag {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .price-tag::before, .price-tag::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: var(--gray-50);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .price-tag::before { left: -10px; }
+    .price-tag::after { right: -10px; }
+    .price-tag-dashed {
+      border-top: 2px dashed var(--gray-200);
+      margin: 12px 0;
+    }
+    .price-tag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+    .price-tag-label {
+      font-size: 13px;
+      color: var(--gray-600);
+      font-weight: 600;
+    }
+    .price-tag-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .price-tag-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .price-tag-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+    .price-tag-menu { font-size: 16px; font-weight: 800; color: var(--navy); }
+    .price-tag-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 50px;
+    }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-red { background: var(--red-bg); color: var(--red); }
+    .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+    .badge-navy { background: var(--navy); color: white; }
+
+    /* ─── MARKETPLACE CARDS ─── */
+    .marketplace-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .mp-card {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .mp-logo { font-size: 22px; margin-bottom: 4px; }
+    .mp-name { font-size: 10px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; }
+    .mp-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-top: 4px;
+    }
+    .mp-fee { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
+
+    /* ─── REKOMENDASI ─── */
+    .rec-card {
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .rec-emoji { font-size: 24px; flex-shrink: 0; }
+    .rec-text { flex: 1; }
+    .rec-title { font-size: 14px; font-weight: 800; color: var(--navy); }
+    .rec-sub { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+    .rec-harga {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal-sheet {
+      background: white;
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-width: 480px;
+      padding: 8px 20px 40px;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .modal-overlay.show .modal-sheet { transform: translateY(0); }
+    .modal-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      margin: 8px auto 16px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+
+    /* ─── SWITCHER ─── */
+    .tab-switcher {
+      display: flex;
+      background: var(--gray-100);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: white;
+      color: var(--navy);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* ─── SIMULASI SLIDER ─── */
+    .sim-price-display {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .sim-price-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .sim-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .sim-input-prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-400);
+    }
+    .sim-input {
+      padding-left: 40px;
+    }
+
+    /* ─── RESEP BUILDER ─── */
+    .resep-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .resep-item:last-child { border-bottom: none; }
+    .resep-qty {
+      width: 70px;
+    }
+    .resep-qty input {
+      width: 100%;
+      padding: 6px 10px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      text-align: center;
+      outline: none;
+    }
+    .resep-qty input:focus { border-color: var(--orange); }
+    .resep-delete {
+      background: var(--red-bg);
+      border: none;
+      color: var(--red);
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .empty-sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      line-height: 1.5;
+    }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--navy);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ─── SETTINGS ─── */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+      gap: 12px;
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--orange-light);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .setting-info { flex: 1; }
+    .setting-label { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .setting-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+    .setting-input {
+      width: 90px;
+      padding: 8px 10px;
+      border: 2px solid var(--gray-200);
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      text-align: center;
+      color: var(--navy);
+      outline: none;
+    }
+    .setting-input:focus { border-color: var(--orange); }
+
+    /* ─── PAGE SECTIONS ─── */
+    .page { display: none; }
+    .page.active { display: flex; flex-direction: column; height: 100%; }
+
+    /* ─── MENU SELECT IN KALKULATOR ─── */
+    .menu-select-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .menu-select-card.selected { border-color: var(--orange); }
+    .menu-card-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--orange-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    /* ─── PROGRESS BAR ─── */
+    .progress-bar-wrap {
+      background: var(--gray-100);
+      border-radius: 4px;
+      height: 8px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--orange);
+      transition: width 0.4s ease;
+    }
+
+    .divider { height: 1px; background: var(--gray-100); margin: 8px 0; }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-400);
+      margin: 16px 0 8px;
+    }
+
+    @media (max-width: 360px) {
+      .stat-card .stat-value { font-size: 16px; }
+      .price-tag-big { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ─── PAGE: DASHBOARD ─── -->
+  <div class="page active" id="page-dashboard">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">🧮</div>
+        <span>Kalku<em>Laku</em></span>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="exportData()" title="Export Data">📤</button>
+        <button class="topbar-btn" onclick="document.getElementById('import-input').click()" title="Import Data">📥</button>
+        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)" />
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="hero-banner">
+        <h2>Selamat datang di KalkuLaku!</h2>
+        <p>Hitung HPP & Harga Jual Menu F&B-mu dalam sekali input</p>
+        <button class="hero-cta" onclick="goToPage('kalkulator')">🧮 Hitung Sekarang</button>
+      </div>
+      <div class="stat-grid" id="dashboard-stats">
+        <!-- diisi JS -->
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Menu Terbaru</div>
+        <div id="dashboard-menu-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PAGE: BAHAN ─── -->
+  <div class="page" id="page-bahan">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">🍗</div>
+        <span>Master <em>Bahan</em></span>
+      </div>
+    </div>
+    <div class="scroll-area" id="list-bahan">
+      <!-- diisi JS -->
+    </div>
+  </div>
+
+  <!-- ─── PAGE: PACKAGING ─── -->
+  <div class="page" id="page-packaging">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">📦</div>
+        <span>Master <em>Packaging</em></span>
+      </div>
+    </div>
+    <div class="scroll-area" id="list-packaging">
+      <!-- diisi JS -->
+    </div>
+  </div>
+
+  <!-- ─── PAGE: MENU ─── -->
+  <div class="page" id="page-menu">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">🍽️</div>
+        <span>Daftar <em>Menu</em></span>
+      </div>
+    </div>
+    <div class="scroll-area" id="list-menu">
+      <!-- diisi JS -->
+    </div>
+  </div>
+
+  <!-- ─── PAGE: KALKULATOR ─── -->
+  <div class="page" id="page-kalkulator">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">🧮</div>
+        <span>Kalku<em>lator</em></span>
+      </div>
+    </div>
+    <div class="scroll-area" id="kalkulator-content">
+      <div class="tab-switcher">
+        <button class="tab-btn active" onclick="switchKalkTab('menu', this)">📋 Dari Menu</button>
+        <button class="tab-btn" onclick="switchKalkTab('simulasi', this)">💡 Simulasi</button>
+      </div>
+      <div id="kalk-menu-tab">
+        <div class="card">
+          <div class="card-title">📋 Pilih Menu</div>
+          <div id="kalk-menu-list">
+            <div class="empty-state">
+              <div class="empty-icon">🍽️</div>
+              <div class="empty-title">Belum ada menu</div>
+              <div class="empty-sub">Tambah menu dulu di tab Menu</div>
+            </div>
+          </div>
+        </div>
+        <div id="kalk-result" style="display:none"></div>
+      </div>
+      <div id="kalk-simulasi-tab" style="display:none">
+        <div class="card">
+          <div class="card-title">🎯 Input Biaya Manual</div>
+          <div class="form-group">
+            <label class="form-label">HPP Bahan (Rp)</label>
+            <div class="sim-input-wrap">
+              <span class="sim-input-prefix">Rp</span>
+              <input type="number" class="form-input form-input-mono sim-input" id="sim-hpp-bahan" placeholder="9.000" oninput="updateSimulasi()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">HPP Packaging (Rp)</label>
+            <div class="sim-input-wrap">
+              <span class="sim-input-prefix">Rp</span>
+              <input type="number" class="form-input form-input-mono sim-input" id="sim-hpp-pack" placeholder="2.000" oninput="updateSimulasi()" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">RB Cost (%)</label>
+              <input type="number" class="form-input form-input-mono" id="sim-rb" value="30" oninput="updateSimulasi()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Profit (%)</label>
+              <input type="number" class="form-input form-input-mono" id="sim-target" value="50" oninput="updateSimulasi()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Metode Harga Jual</label>
+            <select class="form-input" id="sim-metode" onchange="updateSimulasi()">
+              <option value="A">Metode A — Target Profit Markup</option>
+              <option value="B">Metode B — Margin Harga Jual</option>
+            </select>
+          </div>
+        </div>
+        <div id="sim-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PAGE: PENGATURAN ─── -->
+  <div class="page" id="page-settings">
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">⚙️</div>
+        <span>Peng<em>aturan</em></span>
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="card">
+        <div class="card-title">💰 Biaya Operasional</div>
+        <div class="setting-row">
+          <div class="setting-icon">🏭</div>
+          <div class="setting-info">
+            <div class="setting-label">RB Cost (Running Business)</div>
+            <div class="setting-sub">Gas, listrik, gaji, sewa, dll</div>
+          </div>
+          <input type="number" class="setting-input" id="setting-rb" value="30" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🎯</div>
+          <div class="setting-info">
+            <div class="setting-label">Target Profit Default</div>
+            <div class="setting-sub">Profit yang ingin kamu capai</div>
+          </div>
+          <input type="number" class="setting-input" id="setting-profit" value="50" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">📐</div>
+          <div class="setting-info">
+            <div class="setting-label">Pembulatan Harga</div>
+            <div class="setting-sub">Bulatkan ke kelipatan</div>
+          </div>
+          <select class="setting-input" id="setting-bulat" onchange="saveSettings()">
+            <option value="100">100</option>
+            <option value="500" selected>500</option>
+            <option value="1000">1.000</option>
+            <option value="5000">5.000</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🛵 Fee Marketplace</div>
+        <div class="setting-row">
+          <div class="setting-icon">🟢</div>
+          <div class="setting-info">
+            <div class="setting-label">GoFood</div>
+          </div>
+          <input type="number" class="setting-input" id="setting-gofood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🟢</div>
+          <div class="setting-info">
+            <div class="setting-label">GrabFood</div>
+          </div>
+          <input type="number" class="setting-input" id="setting-grabfood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
+        </div>
+        <div class="setting-row">
+          <div class="setting-icon">🟠</div>
+          <div class="setting-info">
+            <div class="setting-label">ShopeeFood</div>
+          </div>
+          <input type="number" class="setting-input" id="setting-shopeefood" value="20" onchange="saveSettings()" /> <span style="font-size:12px;color:var(--gray-400)">%</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💾 Backup & Restore</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-navy btn-sm" onclick="exportData()">📤 Export JSON</button>
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-input2').click()">📥 Import JSON</button>
+          <input type="file" id="import-input2" accept=".json" style="display:none" onchange="importData(event)" />
+          <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red)" onclick="resetAllData()">🗑️ Reset Data</button>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:center;padding:20px;">
+        <div style="font-size:32px;margin-bottom:8px">🧮</div>
+        <div style="font-weight:900;font-size:16px;color:var(--navy)">KalkuLaku v2.0</div>
+        <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Kalkulator HPP F&B untuk UMKM Indonesia</div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:8px">by Jawara Abda · Yogyakarta</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BOTTOM NAV ─── -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="goToPage('dashboard')" id="nav-dashboard">
+      <span class="nav-icon">🏠</span>Dashboard
+    </button>
+    <button class="nav-item" onclick="goToPage('bahan')" id="nav-bahan">
+      <span class="nav-icon">🍗</span>Bahan
+    </button>
+    <button class="nav-item" onclick="goToPage('packaging')" id="nav-packaging">
+      <span class="nav-icon">📦</span>Pack
+    </button>
+    <button class="nav-item" onclick="goToPage('menu')" id="nav-menu">
+      <span class="nav-icon">🍽️</span>Menu
+    </button>
+    <button class="nav-item" onclick="goToPage('kalkulator')" id="nav-kalkulator">
+      <span class="nav-icon">🧮</span>Hitung
+    </button>
+    <button class="nav-item" onclick="goToPage('settings')" id="nav-settings">
+      <span class="nav-icon">⚙️</span>Setting
+    </button>
+  </nav>
+
+  <!-- ─── FAB ─── -->
+  <button class="fab" id="fab-btn" onclick="openFAB()">＋</button>
+</div>
+
+<!-- ─── MODALS ─── -->
+
+<!-- Modal Bahan -->
+<div class="modal-overlay" id="modal-bahan">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-bahan-title">➕ Tambah Bahan</div>
+    <input type="hidden" id="edit-bahan-id" />
+    <div class="form-group">
+      <label class="form-label">Nama Bahan</label>
+      <input type="text" class="form-input" id="bahan-nama" placeholder="Contoh: Ayam Fillet" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Harga Beli (Rp)</label>
+        <input type="number" class="form-input form-input-mono" id="bahan-harga" placeholder="55000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jumlah</label>
+        <input type="number" class="form-input form-input-mono" id="bahan-jumlah" placeholder="1000" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Satuan</label>
+      <select class="form-input" id="bahan-satuan">
+        <option value="gram">gram</option>
+        <option value="ml">ml</option>
+        <option value="pcs">pcs</option>
+        <option value="kg">kg</option>
+        <option value="liter">liter</option>
+        <option value="porsi">porsi</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="saveBahan()">💾 Simpan Bahan</button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeModal('modal-bahan')">Batal</button>
+  </div>
+</div>
+
+<!-- Modal Packaging -->
+<div class="modal-overlay" id="modal-packaging">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-pack-title">➕ Tambah Packaging</div>
+    <input type="hidden" id="edit-pack-id" />
+    <div class="form-group">
+      <label class="form-label">Nama Item</label>
+      <input type="text" class="form-input" id="pack-nama" placeholder="Contoh: Bowl Plastik" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Harga Beli (Rp)</label>
+        <input type="number" class="form-input form-input-mono" id="pack-harga" placeholder="20000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jumlah (pcs)</label>
+        <input type="number" class="form-input form-input-mono" id="pack-jumlah" placeholder="100" />
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="savePacking()">💾 Simpan Packaging</button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeModal('modal-packaging')">Batal</button>
+  </div>
+</div>
+
+<!-- Modal Menu -->
+<div class="modal-overlay" id="modal-menu">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-menu-title">➕ Tambah Menu</div>
+    <input type="hidden" id="edit-menu-id" />
+    <div class="form-group">
+      <label class="form-label">Nama Menu</label>
+      <input type="text" class="form-input" id="menu-nama" placeholder="Contoh: Rice Bowl Ayam Geprek" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select class="form-input" id="menu-kategori">
+          <option>Rice Bowl</option>
+          <option>Ayam</option>
+          <option>Mie</option>
+          <option>Minuman</option>
+          <option>Snack</option>
+          <option>Dessert</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Emoji</label>
+        <input type="text" class="form-input" id="menu-emoji" placeholder="🍗" maxlength="2" />
+      </div>
+    </div>
+
+    <div class="section-label">🍗 Resep Bahan</div>
+    <div id="resep-bahan-list"></div>
+    <button class="btn btn-secondary btn-sm" onclick="addResepBahan()" style="margin-bottom:16px">＋ Tambah Bahan</button>
+
+    <div class="section-label">📦 Packaging yang Dipakai</div>
+    <div id="resep-pack-list"></div>
+    <button class="btn btn-secondary btn-sm" onclick="addResepPack()" style="margin-bottom:16px">＋ Tambah Packaging</button>
+
+    <div class="form-group">
+      <label class="form-label">Metode Harga Jual</label>
+      <select class="form-input" id="menu-metode" onchange="toggleMenuTarget()">
+        <option value="A">Metode A — Target Profit Markup</option>
+        <option value="B">Metode B — Margin Harga Jual</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="menu-target-label">Target Profit (%)</label>
+      <input type="number" class="form-input form-input-mono" id="menu-target" placeholder="50" value="50" />
+    </div>
+
+    <button class="btn btn-primary" onclick="saveMenu()">💾 Simpan Menu</button>
+    <button class="btn btn-secondary" style="margin-top:8px" onclick="closeModal('modal-menu')">Batal</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA STORAGE
+// ══════════════════════════════════════════
+
+const DB_KEY = 'kalkulaku_v2';
+
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (!raw) return defaultDB();
+    return JSON.parse(raw);
+  } catch { return defaultDB(); }
+}
+
+function defaultDB() {
+  return {
+    bahan: [],
+    packaging: [],
+    menu: [],
+    settings: {
+      rbCost: 30,
+      targetProfit: 50,
+      pembulatanHarga: 500,
+      feeGoFood: 20,
+      feeGrabFood: 20,
+      feeShopeeFood: 20
+    }
+  };
+}
+
+function saveDB(db) {
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+function getDB() { return loadDB(); }
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function fmt(n) {
+  return 'Rp' + Math.round(n).toLocaleString('id-ID');
+}
+
+function fmtNum(n) {
+  return Math.round(n).toLocaleString('id-ID');
+}
+
+function pct(n) { return Math.round(n) + '%'; }
+
+function bulatkan(harga, kelipatan) {
+  return Math.ceil(harga / kelipatan) * kelipatan;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function getStatusBadge(margin) {
+  if (margin >= 50) return { badge: 'badge-navy', label: '🚀 Sangat Untung', color: 'var(--navy)' };
+  if (margin >= 30) return { badge: 'badge-green', label: '🟢 Sehat', color: 'var(--green)' };
+  return { badge: 'badge-red', label: '🔴 Berisiko', color: 'var(--red)' };
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+
+let currentPage = 'dashboard';
+
+function goToPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  currentPage = page;
+  const fab = document.getElementById('fab-btn');
+  fab.classList.toggle('hidden', page === 'settings' || page === 'kalkulator');
+  renderPage(page);
+}
+
+function renderPage(page) {
+  if (page === 'dashboard') renderDashboard();
+  else if (page === 'bahan') renderBahan();
+  else if (page === 'packaging') renderPackaging();
+  else if (page === 'menu') renderMenu();
+  else if (page === 'kalkulator') renderKalkulator();
+}
+
+// ══════════════════════════════════════════
+// FAB
+// ══════════════════════════════════════════
+
+function openFAB() {
+  if (currentPage === 'bahan') openModal('modal-bahan', 'add');
+  else if (currentPage === 'packaging') openModal('modal-packaging', 'add');
+  else if (currentPage === 'menu') openModal('modal-menu', 'add');
+  else if (currentPage === 'dashboard') goToPage('menu');
+}
+
+// ══════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════
+
+function openModal(id, mode, data) {
+  document.getElementById(id).classList.add('show');
+  if (id === 'modal-bahan') {
+    if (mode === 'add') {
+      document.getElementById('modal-bahan-title').textContent = '➕ Tambah Bahan';
+      document.getElementById('edit-bahan-id').value = '';
+      document.getElementById('bahan-nama').value = '';
+      document.getElementById('bahan-harga').value = '';
+      document.getElementById('bahan-jumlah').value = '';
+      document.getElementById('bahan-satuan').value = 'gram';
+    } else {
+      document.getElementById('modal-bahan-title').textContent = '✏️ Edit Bahan';
+      document.getElementById('edit-bahan-id').value = data.id;
+      document.getElementById('bahan-nama').value = data.nama;
+      document.getElementById('bahan-harga').value = data.hargaBeli;
+      document.getElementById('bahan-jumlah').value = data.jumlah;
+      document.getElementById('bahan-satuan').value = data.satuan;
+    }
+  } else if (id === 'modal-packaging') {
+    if (mode === 'add') {
+      document.getElementById('modal-pack-title').textContent = '➕ Tambah Packaging';
+      document.getElementById('edit-pack-id').value = '';
+      document.getElementById('pack-nama').value = '';
+      document.getElementById('pack-harga').value = '';
+      document.getElementById('pack-jumlah').value = '';
+    } else {
+      document.getElementById('modal-pack-title').textContent = '✏️ Edit Packaging';
+      document.getElementById('edit-pack-id').value = data.id;
+      document.getElementById('pack-nama').value = data.nama;
+      document.getElementById('pack-harga').value = data.hargaBeli;
+      document.getElementById('pack-jumlah').value = data.jumlah;
+    }
+  } else if (id === 'modal-menu') {
+    initResepLists();
+    if (mode === 'add') {
+      document.getElementById('modal-menu-title').textContent = '➕ Tambah Menu';
+      document.getElementById('edit-menu-id').value = '';
+      document.getElementById('menu-nama').value = '';
+      document.getElementById('menu-emoji').value = '🍽️';
+      document.getElementById('menu-metode').value = 'A';
+      document.getElementById('menu-target').value = '50';
+      document.getElementById('menu-target-label').textContent = 'Target Profit (%)';
+      window._resepBahan = [];
+      window._resepPack = [];
+    } else {
+      document.getElementById('modal-menu-title').textContent = '✏️ Edit Menu';
+      document.getElementById('edit-menu-id').value = data.id;
+      document.getElementById('menu-nama').value = data.nama;
+      document.getElementById('menu-emoji').value = data.emoji || '🍽️';
+      document.getElementById('menu-kategori').value = data.kategori;
+      document.getElementById('menu-metode').value = data.metode || 'A';
+      document.getElementById('menu-target').value = data.target || 50;
+      toggleMenuTarget();
+      window._resepBahan = data.resep || [];
+      window._resepPack = data.packaging || [];
+    }
+    renderResepBahan();
+    renderResepPack();
+  }
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('show');
+  });
+});
+
+// ══════════════════════════════════════════
+// BAHAN CRUD
+// ══════════════════════════════════════════
+
+function saveBahan() {
+  const nama = document.getElementById('bahan-nama').value.trim();
+  const harga = parseFloat(document.getElementById('bahan-harga').value);
+  const jumlah = parseFloat(document.getElementById('bahan-jumlah').value);
+  const satuan = document.getElementById('bahan-satuan').value;
+  const editId = document.getElementById('edit-bahan-id').value;
+
+  if (!nama || !harga || !jumlah) { showToast('⚠️ Isi semua field dulu!'); return; }
+
+  const db = getDB();
+  const item = { id: editId || uid(), nama, hargaBeli: harga, jumlah, satuan };
+
+  if (editId) {
+    const idx = db.bahan.findIndex(b => b.id === editId);
+    if (idx >= 0) db.bahan[idx] = item;
+  } else {
+    db.bahan.push(item);
+  }
+
+  saveDB(db);
+  closeModal('modal-bahan');
+  renderBahan();
+  showToast(editId ? '✅ Bahan diperbarui!' : '✅ Bahan ditambahkan!');
+}
+
+function deleteBahan(id) {
+  if (!confirm('Hapus bahan ini?')) return;
+  const db = getDB();
+  db.bahan = db.bahan.filter(b => b.id !== id);
+  saveDB(db);
+  renderBahan();
+  showToast('🗑️ Bahan dihapus');
+}
+
+function renderBahan() {
+  const db = getDB();
+  const el = document.getElementById('list-bahan');
+  if (!db.bahan.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🍗</div><div class="empty-title">Belum ada bahan</div><div class="empty-sub">Tap tombol ＋ untuk menambah bahan baku</div></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="card">` + db.bahan.map(b => {
+    const perUnit = b.hargaBeli / b.jumlah;
+    return `<div class="list-item">
+      <div class="list-item-icon">🥩</div>
+      <div class="list-item-info">
+        <div class="list-item-name">${b.nama}</div>
+        <div class="list-item-sub">${fmt(b.hargaBeli)} / ${fmtNum(b.jumlah)} ${b.satuan} · <b>${fmt(perUnit)}/${b.satuan}</b></div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn-icon btn-edit" onclick='openModal("modal-bahan","edit",${JSON.stringify(b)})'>✏️</button>
+        <button class="btn-icon btn-del" onclick='deleteBahan("${b.id}")'>🗑️</button>
+      </div>
+    </div>`;
+  }).join('') + `</div>`;
+}
+
+// ══════════════════════════════════════════
+// PACKAGING CRUD
+// ══════════════════════════════════════════
+
+function savePacking() {
+  const nama = document.getElementById('pack-nama').value.trim();
+  const harga = parseFloat(document.getElementById('pack-harga').value);
+  const jumlah = parseFloat(document.getElementById('pack-jumlah').value);
+  const editId = document.getElementById('edit-pack-id').value;
+
+  if (!nama || !harga || !jumlah) { showToast('⚠️ Isi semua field dulu!'); return; }
+
+  const db = getDB();
+  const item = { id: editId || uid(), nama, hargaBeli: harga, jumlah, satuan: 'pcs' };
+
+  if (editId) {
+    const idx = db.packaging.findIndex(p => p.id === editId);
+    if (idx >= 0) db.packaging[idx] = item;
+  } else {
+    db.packaging.push(item);
+  }
+
+  saveDB(db);
+  closeModal('modal-packaging');
+  renderPackaging();
+  showToast(editId ? '✅ Packaging diperbarui!' : '✅ Packaging ditambahkan!');
+}
+
+function deletePackaging(id) {
+  if (!confirm('Hapus packaging ini?')) return;
+  const db = getDB();
+  db.packaging = db.packaging.filter(p => p.id !== id);
+  saveDB(db);
+  renderPackaging();
+  showToast('🗑️ Packaging dihapus');
+}
+
+function renderPackaging() {
+  const db = getDB();
+  const el = document.getElementById('list-packaging');
+  if (!db.packaging.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">Belum ada packaging</div><div class="empty-sub">Tap tombol ＋ untuk menambah packaging</div></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="card">` + db.packaging.map(p => {
+    const perPcs = p.hargaBeli / p.jumlah;
+    return `<div class="list-item">
+      <div class="list-item-icon">📦</div>
+      <div class="list-item-info">
+        <div class="list-item-name">${p.nama}</div>
+        <div class="list-item-sub">${fmt(p.hargaBeli)} / ${fmtNum(p.jumlah)} pcs · <b>${fmt(perPcs)}/pcs</b></div>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn-icon btn-edit" onclick='openModal("modal-packaging","edit",${JSON.stringify(p)})'>✏️</button>
+        <button class="btn-icon btn-del" onclick='deletePackaging("${p.id}")'>🗑️</button>
+      </div>
+    </div>`;
+  }).join('') + `</div>`;
+}
+
+// ══════════════════════════════════════════
+// RESEP BUILDER
+// ══════════════════════════════════════════
+
+window._resepBahan = [];
+window._resepPack = [];
+
+function initResepLists() {
+  if (!window._resepBahan) window._resepBahan = [];
+  if (!window._resepPack) window._resepPack = [];
+}
+
+function addResepBahan() {
+  const db = getDB();
+  if (!db.bahan.length) { showToast('⚠️ Tambah bahan di Master Bahan dulu!'); return; }
+  window._resepBahan.push({ bahanId: db.bahan[0].id, qty: 0 });
+  renderResepBahan();
+}
+
+function addResepPack() {
+  const db = getDB();
+  if (!db.packaging.length) { showToast('⚠️ Tambah packaging di Master Packaging dulu!'); return; }
+  window._resepPack.push({ packId: db.packaging[0].id, qty: 1 });
+  renderResepPack();
+}
+
+function renderResepBahan() {
+  const db = getDB();
+  const el = document.getElementById('resep-bahan-list');
+  if (!window._resepBahan.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--gray-400);padding:8px 0">Belum ada bahan. Tap ＋ di bawah.</div>';
+    return;
+  }
+  el.innerHTML = window._resepBahan.map((r, i) => {
+    const b = db.bahan.find(x => x.id === r.bahanId) || db.bahan[0];
+    return `<div class="resep-item">
+      <select class="form-input" style="flex:1;padding:8px 10px;font-size:13px" onchange="window._resepBahan[${i}].bahanId=this.value">
+        ${db.bahan.map(b2 => `<option value="${b2.id}" ${b2.id===r.bahanId?'selected':''}>${b2.nama} (${b2.satuan})</option>`).join('')}
+      </select>
+      <div class="resep-qty">
+        <input type="number" value="${r.qty || ''}" placeholder="0" onchange="window._resepBahan[${i}].qty=parseFloat(this.value)||0" />
+      </div>
+      <button class="resep-delete" onclick="window._resepBahan.splice(${i},1);renderResepBahan()">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function renderResepPack() {
+  const db = getDB();
+  const el = document.getElementById('resep-pack-list');
+  if (!window._resepPack.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--gray-400);padding:8px 0">Belum ada packaging. Tap ＋ di bawah.</div>';
+    return;
+  }
+  el.innerHTML = window._resepPack.map((r, i) => {
+    return `<div class="resep-item">
+      <select class="form-input" style="flex:1;padding:8px 10px;font-size:13px" onchange="window._resepPack[${i}].packId=this.value">
+        ${db.packaging.map(p => `<option value="${p.id}" ${p.id===r.packId?'selected':''}>${p.nama}</option>`).join('')}
+      </select>
+      <div class="resep-qty">
+        <input type="number" value="${r.qty || 1}" placeholder="1" min="1" onchange="window._resepPack[${i}].qty=parseFloat(this.value)||1" />
+      </div>
+      <button class="resep-delete" onclick="window._resepPack.splice(${i},1);renderResepPack()">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleMenuTarget() {
+  const metode = document.getElementById('menu-metode').value;
+  document.getElementById('menu-target-label').textContent = metode === 'A' ? 'Target Profit (%)' : 'Target Margin (%)';
+}
+
+// ══════════════════════════════════════════
+// MENU CRUD
+// ══════════════════════════════════════════
+
+function saveMenu() {
+  const nama = document.getElementById('menu-nama').value.trim();
+  const emoji = document.getElementById('menu-emoji').value.trim() || '🍽️';
+  const kategori = document.getElementById('menu-kategori').value;
+  const metode = document.getElementById('menu-metode').value;
+  const target = parseFloat(document.getElementById('menu-target').value) || 50;
+  const editId = document.getElementById('edit-menu-id').value;
+
+  if (!nama) { showToast('⚠️ Nama menu wajib diisi!'); return; }
+
+  const db = getDB();
+  const item = {
+    id: editId || uid(),
+    nama, emoji, kategori, metode, target,
+    resep: window._resepBahan,
+    packaging: window._resepPack
+  };
+
+  if (editId) {
+    const idx = db.menu.findIndex(m => m.id === editId);
+    if (idx >= 0) db.menu[idx] = item;
+  } else {
+    db.menu.push(item);
+  }
+
+  saveDB(db);
+  closeModal('modal-menu');
+  renderMenu();
+  showToast(editId ? '✅ Menu diperbarui!' : '✅ Menu disimpan!');
+}
+
+function deleteMenu(id) {
+  if (!confirm('Hapus menu ini?')) return;
+  const db = getDB();
+  db.menu = db.menu.filter(m => m.id !== id);
+  saveDB(db);
+  renderMenu();
+  showToast('🗑️ Menu dihapus');
+}
+
+function renderMenu() {
+  const db = getDB();
+  const el = document.getElementById('list-menu');
+  if (!db.menu.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-title">Belum ada menu</div><div class="empty-sub">Tap tombol ＋ untuk menambah menu baru</div></div>`;
+    return;
+  }
+  el.innerHTML = db.menu.map(m => {
+    const hasil = hitungMenu(m, db);
+    const s = getStatusBadge(hasil.margin);
+    return `<div class="card" style="cursor:pointer" onclick='hitungDanTampilMenu("${m.id}")'>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div class="menu-card-icon">${m.emoji || '🍽️'}</div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:800;color:var(--navy)">${m.nama}</div>
+          <div style="font-size:12px;color:var(--gray-400)">${m.kategori}</div>
+        </div>
+        <span class="price-tag-badge ${s.badge}">${s.label}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+        <div>
+          <div style="font-size:11px;color:var(--gray-400);font-weight:700">HPP Real</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--gray-600)">${fmt(hasil.hppReal)}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--gray-400);font-weight:700">Harga Jual</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--orange)">${fmt(hasil.hargaJual)}</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width:${Math.min(hasil.margin,100)}%;background:${hasil.margin>=50?'var(--orange)':hasil.margin>=30?'var(--green)':'var(--red)'}"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:11px;color:var(--gray-400)">Margin: <b style="color:var(--navy)">${pct(hasil.margin)}</b></span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-icon btn-edit" onclick='event.stopPropagation();openModal("modal-menu","edit",${JSON.stringify(m)})'>✏️</button>
+          <button class="btn-icon btn-del" onclick='event.stopPropagation();deleteMenu("${m.id}")'>🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// KALKULASI CORE
+// ══════════════════════════════════════════
+
+function hitungMenu(menu, db) {
+  const settings = db.settings || defaultDB().settings;
+
+  // HPP Bahan
+  let hppBahan = 0;
+  (menu.resep || []).forEach(r => {
+    const b = db.bahan.find(x => x.id === r.bahanId);
+    if (b && r.qty) {
+      const perUnit = b.hargaBeli / b.jumlah;
+      hppBahan += perUnit * r.qty;
+    }
+  });
+
+  // HPP Packaging
+  let hppPack = 0;
+  (menu.packaging || []).forEach(r => {
+    const p = db.packaging.find(x => x.id === r.packId);
+    if (p && r.qty) {
+      const perPcs = p.hargaBeli / p.jumlah;
+      hppPack += perPcs * r.qty;
+    }
+  });
+
+  const hppDasar = hppBahan + hppPack;
+  const rbCost = hppDasar * (settings.rbCost / 100);
+  const hppReal = hppDasar + rbCost;
+
+  const target = menu.target || settings.targetProfit;
+  let hargaJualRaw;
+  if (menu.metode === 'B') {
+    hargaJualRaw = hppReal / (1 - target / 100);
+  } else {
+    hargaJualRaw = hppReal * (1 + target / 100);
+  }
+
+  const hargaJual = bulatkan(hargaJualRaw, settings.pembulatanHarga || 500);
+  const profit = hargaJual - hppReal;
+  const margin = hargaJual > 0 ? (profit / hargaJual) * 100 : 0;
+  const foodCost = hargaJual > 0 ? (hppReal / hargaJual) * 100 : 0;
+
+  const feeGF = settings.feeGoFood / 100;
+  const feeGrab = settings.feeGrabFood / 100;
+  const feeSF = settings.feeShopeeFood / 100;
+
+  const hargaGoFood = bulatkan(hargaJual / (1 - feeGF), settings.pembulatanHarga || 500);
+  const hargaGrabFood = bulatkan(hargaJual / (1 - feeGrab), settings.pembulatanHarga || 500);
+  const hargaShopeeFood = bulatkan(hargaJual / (1 - feeSF), settings.pembulatanHarga || 500);
+
+  // Rekomendasi
+  const hargaMinimal = bulatkan(hppReal, settings.pembulatanHarga || 500);
+  const hargaAman = bulatkan(hppReal / (1 - 0.30), settings.pembulatanHarga || 500);
+  const hargaOptimal = bulatkan(hppReal / (1 - 0.50), settings.pembulatanHarga || 500);
+
+  return { hppBahan, hppPack, hppDasar, rbCost, hppReal, hargaJual, profit, margin, foodCost, hargaGoFood, hargaGrabFood, hargaShopeeFood, hargaMinimal, hargaAman, hargaOptimal, settings };
+}
+
+function hitungSimulasi(hppBahan, hppPack, rb, target, metode, settings) {
+  const hppDasar = hppBahan + hppPack;
+  const rbCost = hppDasar * (rb / 100);
+  const hppReal = hppDasar + rbCost;
+  let hargaJualRaw;
+  if (metode === 'B') {
+    hargaJualRaw = hppReal / (1 - target / 100);
+  } else {
+    hargaJualRaw = hppReal * (1 + target / 100);
+  }
+  const kelipatan = settings.pembulatanHarga || 500;
+  const hargaJual = bulatkan(hargaJualRaw, kelipatan);
+  const profit = hargaJual - hppReal;
+  const margin = hargaJual > 0 ? (profit / hargaJual) * 100 : 0;
+  const foodCost = hargaJual > 0 ? (hppReal / hargaJual) * 100 : 0;
+
+  const hargaGoFood = bulatkan(hargaJual / (1 - settings.feeGoFood / 100), kelipatan);
+  const hargaGrabFood = bulatkan(hargaJual / (1 - settings.feeGrabFood / 100), kelipatan);
+  const hargaShopeeFood = bulatkan(hargaJual / (1 - settings.feeShopeeFood / 100), kelipatan);
+  const hargaMinimal = bulatkan(hppReal, kelipatan);
+  const hargaAman = bulatkan(hppReal / 0.70, kelipatan);
+  const hargaOptimal = bulatkan(hppReal / 0.50, kelipatan);
+
+  return { hppBahan, hppPack, hppDasar, rbCost, hppReal, hargaJual, profit, margin, foodCost, hargaGoFood, hargaGrabFood, hargaShopeeFood, hargaMinimal, hargaAman, hargaOptimal };
+}
+
+// ══════════════════════════════════════════
+// RENDER HASIL
+// ══════════════════════════════════════════
+
+function renderHasil(h, menuNama) {
+  const s = getStatusBadge(h.margin);
+  const marginColor = h.margin >= 50 ? 'var(--navy)' : h.margin >= 30 ? 'var(--green)' : 'var(--red)';
+
+  return `
+    <!-- PRICE TAG UTAMA -->
+    <div class="price-tag">
+      <div class="price-tag-header">
+        <div class="price-tag-menu">${menuNama || 'Hasil Kalkulasi'}</div>
+        <span class="price-tag-badge ${s.badge}">${s.label}</span>
+      </div>
+      <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px">Harga Jual Offline</div>
+      <div class="price-tag-big">${fmt(h.hargaJual)}</div>
+      <div class="price-tag-dashed"></div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">HPP Bahan</span>
+        <span class="price-tag-value">${fmt(h.hppBahan)}</span>
+      </div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">HPP Packaging</span>
+        <span class="price-tag-value">${fmt(h.hppPack)}</span>
+      </div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">HPP Dasar</span>
+        <span class="price-tag-value">${fmt(h.hppDasar)}</span>
+      </div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">RB Cost (${h.settings ? h.settings.rbCost : 30}%)</span>
+        <span class="price-tag-value">${fmt(h.rbCost)}</span>
+      </div>
+      <div class="price-tag-row" style="background:var(--gray-50);border-radius:8px;padding:6px 8px;margin:4px 0">
+        <span class="price-tag-label" style="font-weight:800;color:var(--navy)">HPP Real</span>
+        <span class="price-tag-value" style="color:var(--navy)">${fmt(h.hppReal)}</span>
+      </div>
+      <div class="price-tag-dashed"></div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">Profit / Porsi</span>
+        <span class="price-tag-value" style="color:var(--green)">${fmt(h.profit)}</span>
+      </div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">Margin Profit</span>
+        <span class="price-tag-value" style="color:${marginColor};font-size:18px;font-weight:900">${pct(h.margin)}</span>
+      </div>
+      <div class="price-tag-row">
+        <span class="price-tag-label">Food Cost %</span>
+        <span class="price-tag-value">${pct(h.foodCost)}</span>
+      </div>
+      <div class="progress-bar-wrap" style="margin-top:10px">
+        <div class="progress-bar-fill" style="width:${Math.min(h.margin,100)}%;background:${marginColor}"></div>
+      </div>
+    </div>
+
+    <!-- MARKETPLACE -->
+    <div class="section-label">🛵 Harga Marketplace</div>
+    <div class="marketplace-grid">
+      <div class="mp-card">
+        <div class="mp-logo">🟢</div>
+        <div class="mp-name">GoFood</div>
+        <div class="mp-price">${fmt(h.hargaGoFood)}</div>
+        <div class="mp-fee">Fee ${h.settings ? h.settings.feeGoFood : 20}%</div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-logo">🟢</div>
+        <div class="mp-name">GrabFood</div>
+        <div class="mp-price">${fmt(h.hargaGrabFood)}</div>
+        <div class="mp-fee">Fee ${h.settings ? h.settings.feeGrabFood : 20}%</div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-logo">🟠</div>
+        <div class="mp-name">ShopeeFood</div>
+        <div class="mp-price">${fmt(h.hargaShopeeFood)}</div>
+        <div class="mp-fee">Fee ${h.settings ? h.settings.feeShopeeFood : 20}%</div>
+      </div>
+    </div>
+
+    <!-- REKOMENDASI -->
+    <div class="section-label">🎯 Rekomendasi Harga</div>
+    <div class="rec-card" style="background:var(--red-bg)">
+      <div class="rec-emoji">⚠️</div>
+      <div class="rec-text">
+        <div class="rec-title">Harga Minimal (Impas)</div>
+        <div class="rec-sub">Tidak rugi, tapi tidak untung</div>
+        <div class="rec-harga" style="color:var(--red)">${fmt(h.hargaMinimal)}</div>
+      </div>
+    </div>
+    <div class="rec-card" style="background:var(--green-bg)">
+      <div class="rec-emoji">🟢</div>
+      <div class="rec-text">
+        <div class="rec-title">Harga Aman (Margin 30%)</div>
+        <div class="rec-sub">Profit sehat dan berkelanjutan</div>
+        <div class="rec-harga" style="color:var(--green)">${fmt(h.hargaAman)}</div>
+      </div>
+    </div>
+    <div class="rec-card" style="background:var(--navy);border-radius:var(--radius-sm)">
+      <div class="rec-emoji">🚀</div>
+      <div class="rec-text">
+        <div class="rec-title" style="color:white">Harga Optimal (Margin 50%)</div>
+        <div class="rec-sub" style="color:rgba(255,255,255,0.6)">Profit maksimal, masih realistis</div>
+        <div class="rec-harga" style="color:var(--orange)">${fmt(h.hargaOptimal)}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// KALKULATOR PAGE
+// ══════════════════════════════════════════
+
+let selectedMenuId = null;
+
+function renderKalkulator() {
+  const db = getDB();
+  const el = document.getElementById('kalk-menu-list');
+  if (!db.menu.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-title">Belum ada menu</div><div class="empty-sub">Tambah menu dulu di tab Menu, lalu kembali ke sini untuk hitung HPP-nya</div></div>`;
+    return;
+  }
+  el.innerHTML = db.menu.map(m => {
+    return `<div class="menu-select-card ${selectedMenuId===m.id?'selected':''}" onclick="selectMenuKalk('${m.id}')">
+      <div class="menu-card-icon">${m.emoji || '🍽️'}</div>
+      <div style="flex:1">
+        <div style="font-size:15px;font-weight:800;color:var(--navy)">${m.nama}</div>
+        <div style="font-size:12px;color:var(--gray-400)">${m.kategori}</div>
+      </div>
+      <span style="font-size:18px">${selectedMenuId===m.id?'✅':'▷'}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectMenuKalk(id) {
+  selectedMenuId = id;
+  renderKalkulator();
+  hitungDanTampilMenu(id);
+  setTimeout(() => {
+    document.getElementById('kalk-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function hitungDanTampilMenu(id) {
+  const db = getDB();
+  const menu = db.menu.find(m => m.id === id);
+  if (!menu) return;
+  const h = hitungMenu(menu, db);
+  const resultEl = document.getElementById('kalk-result');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = renderHasil(h, menu.nama);
+  if (currentPage !== 'kalkulator') {
+    goToPage('kalkulator');
+    setTimeout(() => selectMenuKalk(id), 100);
+  }
+}
+
+function switchKalkTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('kalk-menu-tab').style.display = tab === 'menu' ? 'block' : 'none';
+  document.getElementById('kalk-simulasi-tab').style.display = tab === 'simulasi' ? 'block' : 'none';
+  if (tab === 'simulasi') updateSimulasi();
+}
+
+function updateSimulasi() {
+  const hppB = parseFloat(document.getElementById('sim-hpp-bahan').value) || 0;
+  const hppP = parseFloat(document.getElementById('sim-hpp-pack').value) || 0;
+  const rb = parseFloat(document.getElementById('sim-rb').value) || 30;
+  const target = parseFloat(document.getElementById('sim-target').value) || 50;
+  const metode = document.getElementById('sim-metode').value;
+  const db = getDB();
+  const h = hitungSimulasi(hppB, hppP, rb, target, metode, db.settings);
+  const el = document.getElementById('sim-result');
+  if (!hppB && !hppP) { el.innerHTML = ''; return; }
+  h.settings = db.settings;
+  el.innerHTML = renderHasil(h, 'Simulasi Manual');
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════
+
+function renderDashboard() {
+  const db = getDB();
+  const menus = db.menu;
+  const statsEl = document.getElementById('dashboard-stats');
+  const menuListEl = document.getElementById('dashboard-menu-list');
+
+  let avgHPP = 0, avgHarga = 0, avgMargin = 0;
+  let maxProfitMenu = null, minProfitMenu = null;
+  let maxMargin = -Infinity, minMargin = Infinity;
+
+  const hasilList = menus.map(m => ({ menu: m, hasil: hitungMenu(m, db) }));
+
+  hasilList.forEach(({ hasil }) => {
+    avgHPP += hasil.hppReal;
+    avgHarga += hasil.hargaJual;
+    avgMargin += hasil.margin;
+    if (hasil.margin > maxMargin) { maxMargin = hasil.margin; maxProfitMenu = hasil; }
+    if (hasil.margin < minMargin) { minMargin = hasil.margin; minProfitMenu = hasil; }
+  });
+
+  if (menus.length) {
+    avgHPP = avgHPP / menus.length;
+    avgHarga = avgHarga / menus.length;
+    avgMargin = avgMargin / menus.length;
+  }
+
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-icon">🍽️</div>
+      <div class="stat-label">Total Menu</div>
+      <div class="stat-value">${menus.length}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-label">Margin Rata-rata</div>
+      <div class="stat-value">${menus.length ? pct(avgMargin) : '-'}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-label">HPP Rata-rata</div>
+      <div class="stat-value" style="font-size:15px">${menus.length ? fmt(avgHPP) : '-'}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏷️</div>
+      <div class="stat-label">Harga Rata-rata</div>
+      <div class="stat-value" style="font-size:15px">${menus.length ? fmt(avgHarga) : '-'}</div>
+    </div>
+  `;
+
+  if (!menus.length) {
+    menuListEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-title">Mulai dari sini!</div><div class="empty-sub">Tambah bahan, packaging, lalu buat menu untuk mulai kalkulasi HPP</div></div>`;
+    return;
+  }
+
+  menuListEl.innerHTML = hasilList.slice(0, 5).map(({ menu: m, hasil: h }) => {
+    const s = getStatusBadge(h.margin);
+    return `<div class="list-item" onclick='hitungDanTampilMenu("${m.id}")' style="cursor:pointer">
+      <div class="list-item-icon">${m.emoji || '🍽️'}</div>
+      <div class="list-item-info">
+        <div class="list-item-name">${m.nama}</div>
+        <div class="list-item-sub">HPP ${fmt(h.hppReal)} · Margin <b>${pct(h.margin)}</b></div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--orange)">${fmt(h.hargaJual)}</div>
+        <span class="price-tag-badge ${s.badge}" style="font-size:10px;padding:2px 8px">${s.label}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════
+
+function loadSettings() {
+  const db = getDB();
+  const s = db.settings || defaultDB().settings;
+  document.getElementById('setting-rb').value = s.rbCost;
+  document.getElementById('setting-profit').value = s.targetProfit;
+  document.getElementById('setting-bulat').value = s.pembulatanHarga;
+  document.getElementById('setting-gofood').value = s.feeGoFood;
+  document.getElementById('setting-grabfood').value = s.feeGrabFood;
+  document.getElementById('setting-shopeefood').value = s.feeShopeeFood;
+  document.getElementById('sim-rb').value = s.rbCost;
+  document.getElementById('sim-target').value = s.targetProfit;
+}
+
+function saveSettings() {
+  const db = getDB();
+  db.settings = {
+    rbCost: parseFloat(document.getElementById('setting-rb').value) || 30,
+    targetProfit: parseFloat(document.getElementById('setting-profit').value) || 50,
+    pembulatanHarga: parseInt(document.getElementById('setting-bulat').value) || 500,
+    feeGoFood: parseFloat(document.getElementById('setting-gofood').value) || 20,
+    feeGrabFood: parseFloat(document.getElementById('setting-grabfood').value) || 20,
+    feeShopeeFood: parseFloat(document.getElementById('setting-shopeefood').value) || 20,
+  };
+  saveDB(db);
+  showToast('✅ Pengaturan disimpan!');
+}
+
+// ══════════════════════════════════════════
+// BACKUP & RESTORE
+// ══════════════════════════════════════════
+
+function exportData() {
+  const db = getDB();
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kalkulaku_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📤 Data berhasil diekspor!');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.bahan || !data.packaging || !data.menu) throw new Error('Format tidak valid');
+      saveDB(data);
+      loadSettings();
+      renderPage(currentPage);
+      showToast('📥 Data berhasil diimpor!');
+    } catch {
+      showToast('⚠️ File JSON tidak valid!');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetAllData() {
+  if (!confirm('Reset semua data? Aksi ini tidak bisa dibatalkan!')) return;
+  localStorage.removeItem(DB_KEY);
+  loadSettings();
+  renderPage(currentPage);
+  showToast('🗑️ Semua data direset');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+
+function init() {
+  loadSettings();
+  renderDashboard();
+
+  // Seed data demo jika kosong
+  const db = getDB();
+  if (!db.bahan.length && !db.packaging.length && !db.menu.length) {
+    db.bahan = [
+      { id: uid(), nama: 'Ayam Fillet', hargaBeli: 55000, jumlah: 1000, satuan: 'gram' },
+      { id: uid(), nama: 'Nasi Putih', hargaBeli: 12000, jumlah: 1000, satuan: 'gram' },
+      { id: uid(), nama: 'Saus Geprek', hargaBeli: 15000, jumlah: 1000, satuan: 'gram' },
+    ];
+    const b0 = db.bahan[0].id, b1 = db.bahan[1].id, b2 = db.bahan[2].id;
+    db.packaging = [
+      { id: uid(), nama: 'Bowl Plastik', hargaBeli: 20000, jumlah: 100, satuan: 'pcs' },
+      { id: uid(), nama: 'Tutup Bowl', hargaBeli: 15000, jumlah: 100, satuan: 'pcs' },
+      { id: uid(), nama: 'Sendok Plastik', hargaBeli: 20000, jumlah: 100, satuan: 'pcs' },
+      { id: uid(), nama: 'Tisu', hargaBeli: 8000, jumlah: 100, satuan: 'pcs' },
+    ];
+    const p0=db.packaging[0].id,p1=db.packaging[1].id,p2=db.packaging[2].id,p3=db.packaging[3].id;
+    db.menu = [
+      {
+        id: uid(), nama: 'Rice Bowl Ayam Geprek', emoji: '🍗', kategori: 'Rice Bowl', metode: 'B', target: 50,
+        resep: [
+          { bahanId: b0, qty: 120 },
+          { bahanId: b1, qty: 200 },
+          { bahanId: b2, qty: 30 },
+        ],
+        packaging: [
+          { packId: p0, qty: 1 },
+          { packId: p1, qty: 1 },
+          { packId: p2, qty: 1 },
+          { packId: p3, qty: 2 },
+        ]
+      }
+    ];
+    saveDB(db);
+    renderDashboard();
+  }
+}
+
+init();
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>
